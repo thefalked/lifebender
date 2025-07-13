@@ -1,0 +1,248 @@
+# LifeBender - Cursor Rules
+
+## Project Overview
+This is an offline-first multi-app platform built with Bun, Vite, React, TypeScript, PGLite, and Ultracite. The app prioritizes security with end-to-end encryption and modular architecture.
+
+## Technology Stack
+- **Runtime**: Bun (not Node.js)
+- **Build Tool**: Vite
+- **Frontend**: React + TypeScript
+- **Styling**: Tailwind CSS for utility-first styling
+- **Component Development**: Storybook for development and testing
+- **Database**: PGLite (SQLite-compatible with PostgreSQL syntax)
+- **ORM**: Drizzle with full PGLite support and migrations
+- **Validation**: Zod for type-safe schema validation
+- **Desktop**: Tauri for cross-platform deployment
+- **Linting**: Ultracite
+- **Encryption**: End-to-end encryption for sensitive data
+
+## Code Style & Standards
+
+### TypeScript
+- Use strict TypeScript configuration
+- Prefer interfaces over types for object shapes
+- Use proper type annotations, avoid `any`
+- Implement proper error handling with typed errors
+- Use enums for constants, unions for variants
+
+### React & Styling
+- Use functional components with hooks
+- Implement proper prop typing with interfaces
+- Use React.memo for performance optimization when needed
+- Prefer composition over inheritance
+- Use proper state management patterns
+- Use Tailwind CSS for styling (utility-first approach)
+- Create reusable components with Storybook stories
+- Follow mobile-first responsive design patterns
+
+### Security First
+- All sensitive data must be encrypted
+- Never log sensitive information
+- Use secure random generation for keys/salts
+- Implement proper key derivation (PBKDF2/Argon2)
+- Clear sensitive data from memory after use
+
+### Database (PGLite + Drizzle)
+- Use Drizzle ORM for type-safe database operations
+- Implement proper migration system with Drizzle Kit
+- Use transactions for multi-step operations
+- Optimize queries for performance
+- Implement proper error handling for database operations
+- Use Zod schemas for data validation
+
+## Architecture Patterns
+
+### Multi-App Structure
+- Each sub-app should be self-contained
+- Use shared core services for common functionality
+- Implement proper data isolation between apps
+- Use consistent routing patterns
+
+### Encryption Layer
+- Separate encryption logic from business logic
+- Use app-specific encryption keys
+- Implement proper key management
+- Handle encryption/decryption errors gracefully
+
+### Offline-First & Mobile-First
+- All functionality must work offline
+- Implement proper offline indicators
+- Use local storage for offline data
+- Plan for future sync capabilities
+- Design for mobile screens and touch interactions
+- Use large touch targets and gesture navigation
+- Optimize for small screen layouts
+
+## File Organization
+
+### Directory Structure
+```
+src/
+├── components/     # Shared UI components
+├── core/          # Core services (auth, crypto, db)
+├── router/        # Application routing
+├── apps/          # Sub-applications
+├── utils/         # Utility functions
+└── types/         # TypeScript definitions
+```
+
+### Naming Conventions
+- Use PascalCase for components and interfaces
+- Use camelCase for functions and variables
+- Use kebab-case for file names
+- Use UPPER_SNAKE_CASE for constants
+
+## Development Guidelines
+
+### Performance & Mobile Optimization
+- Optimize for fast startup (< 2 seconds)
+- Keep memory usage under 500MB
+- Use lazy loading for sub-apps
+- Implement proper caching strategies
+- Optimize for mobile performance and battery life
+- Minimize bundle size for faster loading
+- Use efficient touch interactions
+
+### Testing
+- Write unit tests for core services
+- Test encryption/decryption thoroughly
+- Test offline functionality
+- Create Storybook stories for component testing
+- Use visual regression testing for UI components
+- Maintain 90%+ coverage for core services
+
+### Error Handling
+- Implement proper error boundaries
+- Use typed error handling
+- Provide user-friendly error messages
+- Log errors appropriately (no sensitive data)
+
+## Security Requirements
+
+### Encryption Implementation
+- Use AES-256-GCM for data encryption
+- Implement proper key derivation
+- Secure key storage with hardware backing when available
+- Support key rotation without data loss
+
+### Data Classification
+- **Sensitive**: Financial data, personal notes, passwords
+- **Non-Sensitive**: UI preferences, app settings
+- Encrypt all sensitive data at rest
+- Implement proper access controls
+
+## Code Quality
+
+### Linting (Ultracite)
+- Follow Ultracite recommendations
+- Address all linting warnings
+- Maintain consistent code style
+- Use AI-powered code quality suggestions
+
+### Documentation
+- Document complex functions and classes
+- Include JSDoc comments for public APIs
+- Maintain up-to-date README
+- Document security considerations
+
+## Specific Requirements
+
+### Money Manager App
+- Encrypt all financial data
+- Implement proper transaction categorization
+- Support multiple account types
+- Provide budget tracking features
+
+### Todo App
+- Implement task management features
+- Support categories and priorities
+- Include due date tracking
+- Provide search and filtering
+
+## Common Patterns
+
+### Database Operations (Drizzle + PGLite)
+```typescript
+// Use Drizzle for type-safe database operations
+import { drizzle } from 'drizzle-orm/pglite';
+import { migrate } from 'drizzle-orm/pglite/migrator';
+
+// Schema definition with Zod validation
+import { z } from 'zod';
+import { pgTable, text, integer } from 'drizzle-orm/pg-core';
+
+// Use transactions for multi-step operations
+const transaction = await db.transaction(async (tx) => {
+  // Database operations with type safety
+  return result;
+});
+```
+
+### Encryption Operations
+```typescript
+// Always handle encryption errors
+try {
+  const encrypted = await encryptService.encrypt(data, key);
+  return encrypted;
+} catch (error) {
+  // Log error (no sensitive data)
+  throw new EncryptionError('Failed to encrypt data');
+}
+```
+
+### Component Structure (Mobile-First with Tailwind)
+```typescript
+interface ComponentProps {
+  // Define props interface with Zod validation
+}
+
+export const Component: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
+  // Mobile-first component with Tailwind CSS
+  return (
+    <div className="p-4 rounded-lg bg-white shadow-sm touch-manipulation">
+      {/* Large touch targets, responsive design */}
+    </div>
+  );
+};
+
+// Storybook story for component testing
+export default {
+  title: 'Components/Component',
+  component: Component,
+  parameters: {
+    viewport: { defaultViewport: 'mobile1' }
+  }
+} as Meta;
+
+export const Default: Story<ComponentProps> = (args) => <Component {...args} />;
+```
+
+## Avoid
+
+- Using `any` type in TypeScript
+- Logging sensitive information
+- Storing keys in plain text
+- Using synchronous encryption operations
+- Mixing business logic with UI logic
+- Hardcoding configuration values
+- Using deprecated React patterns
+- Small touch targets for mobile
+- Complex desktop-only interactions
+- Heavy animations that drain battery
+- Custom CSS when Tailwind utilities exist
+- Components without Storybook stories
+- Non-responsive design patterns
+
+## Remember
+
+- Security is the top priority
+- Offline functionality is required
+- Mobile-first design is essential
+- Performance matters for user experience
+- Type safety prevents runtime errors
+- Modular design enables scalability
+- Touch interactions should be intuitive
+- Battery optimization is important
+- Use Tailwind for consistent styling
+- Create Storybook stories for all components
+- Design system ensures UI consistency 
