@@ -1,9 +1,11 @@
 # LifeBender - Cursor Rules
 
 ## Project Overview
+
 This is an offline-first multi-app platform built with Bun, Vite, React, TypeScript, PGLite, and Ultracite. The app prioritizes security with end-to-end encryption and modular architecture.
 
 ## Technology Stack
+
 - **Runtime**: Bun (not Node.js)
 - **Build Tool**: Vite
 - **Frontend**: React + TypeScript
@@ -16,55 +18,24 @@ This is an offline-first multi-app platform built with Bun, Vite, React, TypeScr
 - **Linting**: Ultracite
 - **Encryption**: End-to-end encryption for sensitive data
 
-## Code Style & Standards
-
-### TypeScript
-- Use strict TypeScript configuration
-- Prefer interfaces over types for object shapes
-- Use proper type annotations, avoid `any`
-- Implement proper error handling with typed errors
-- Use enums for constants, unions for variants
-
-### React & Styling
-- Use functional components with hooks
-- Implement proper prop typing with interfaces
-- Use React.memo for performance optimization when needed
-- Prefer composition over inheritance
-- Use proper state management patterns
-- Use Tailwind CSS for styling (utility-first approach)
-- Create reusable components with Storybook stories
-- Follow mobile-first responsive design patterns
-
-### Security First
-- All sensitive data must be encrypted
-- Never log sensitive information
-- Use secure random generation for keys/salts
-- Implement proper key derivation (PBKDF2/Argon2)
-- Clear sensitive data from memory after use
-
-### Database (PGLite + Drizzle)
-- Use Drizzle ORM for type-safe database operations
-- Implement proper migration system with Drizzle Kit
-- Use transactions for multi-step operations
-- Optimize queries for performance
-- Implement proper error handling for database operations
-- Use Zod schemas for data validation
-
 ## Architecture Patterns
 
 ### Multi-App Structure
+
 - Each sub-app should be self-contained
 - Use shared core services for common functionality
 - Implement proper data isolation between apps
 - Use consistent routing patterns
 
 ### Encryption Layer
+
 - Separate encryption logic from business logic
 - Use app-specific encryption keys
 - Implement proper key management
 - Handle encryption/decryption errors gracefully
 
 ### Offline-First & Mobile-First
+
 - All functionality must work offline
 - Implement proper offline indicators
 - Use local storage for offline data
@@ -76,6 +47,7 @@ This is an offline-first multi-app platform built with Bun, Vite, React, TypeScr
 ## File Organization
 
 ### Directory Structure
+
 ```
 src/
 ├── components/     # Shared UI components
@@ -87,6 +59,7 @@ src/
 ```
 
 ### Naming Conventions
+
 - Use PascalCase for components and interfaces
 - Use camelCase for functions and variables
 - Use kebab-case for file names
@@ -95,6 +68,7 @@ src/
 ## Development Guidelines
 
 ### Performance & Mobile Optimization
+
 - Optimize for fast startup (< 2 seconds)
 - Keep memory usage under 500MB
 - Use lazy loading for sub-apps
@@ -104,6 +78,7 @@ src/
 - Use efficient touch interactions
 
 ### Testing
+
 - Write unit tests for core services
 - Test encryption/decryption thoroughly
 - Test offline functionality
@@ -112,6 +87,7 @@ src/
 - Maintain 90%+ coverage for core services
 
 ### Error Handling
+
 - Implement proper error boundaries
 - Use typed error handling
 - Provide user-friendly error messages
@@ -120,12 +96,14 @@ src/
 ## Security Requirements
 
 ### Encryption Implementation
+
 - Use AES-256-GCM for data encryption
 - Implement proper key derivation
 - Secure key storage with hardware backing when available
 - Support key rotation without data loss
 
 ### Data Classification
+
 - **Sensitive**: Financial data, personal notes, passwords
 - **Non-Sensitive**: UI preferences, app settings
 - Encrypt all sensitive data at rest
@@ -134,12 +112,14 @@ src/
 ## Code Quality
 
 ### Linting (Ultracite)
+
 - Follow Ultracite recommendations
 - Address all linting warnings
 - Maintain consistent code style
 - Use AI-powered code quality suggestions
 
 ### Documentation
+
 - Document complex functions and classes
 - Include JSDoc comments for public APIs
 - Maintain up-to-date README
@@ -148,12 +128,14 @@ src/
 ## Specific Requirements
 
 ### Money Manager App
+
 - Encrypt all financial data
 - Implement proper transaction categorization
 - Support multiple account types
 - Provide budget tracking features
 
 ### Todo App
+
 - Implement task management features
 - Support categories and priorities
 - Include due date tracking
@@ -162,14 +144,15 @@ src/
 ## Common Patterns
 
 ### Database Operations (Drizzle + PGLite)
+
 ```typescript
 // Use Drizzle for type-safe database operations
-import { drizzle } from 'drizzle-orm/pglite';
-import { migrate } from 'drizzle-orm/pglite/migrator';
+import { drizzle } from "drizzle-orm/pglite";
+import { migrate } from "drizzle-orm/pglite/migrator";
 
 // Schema definition with Zod validation
-import { z } from 'zod';
-import { pgTable, text, integer } from 'drizzle-orm/pg-core';
+import { z } from "zod";
+import { pgTable, text, integer } from "drizzle-orm/pg-core";
 
 // Use transactions for multi-step operations
 const transaction = await db.transaction(async (tx) => {
@@ -179,6 +162,7 @@ const transaction = await db.transaction(async (tx) => {
 ```
 
 ### Encryption Operations
+
 ```typescript
 // Always handle encryption errors
 try {
@@ -186,11 +170,12 @@ try {
   return encrypted;
 } catch (error) {
   // Log error (no sensitive data)
-  throw new EncryptionError('Failed to encrypt data');
+  throw new EncryptionError("Failed to encrypt data");
 }
 ```
 
 ### Component Structure (Mobile-First with Tailwind)
+
 ```typescript
 interface ComponentProps {
   // Define props interface with Zod validation
@@ -207,11 +192,11 @@ export const Component: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
 
 // Storybook story for component testing
 export default {
-  title: 'Components/Component',
+  title: "Components/Component",
   component: Component,
   parameters: {
-    viewport: { defaultViewport: 'mobile1' }
-  }
+    viewport: { defaultViewport: "mobile1" },
+  },
 } as Meta;
 
 export const Default: Story<ComponentProps> = (args) => <Component {...args} />;
@@ -219,13 +204,11 @@ export const Default: Story<ComponentProps> = (args) => <Component {...args} />;
 
 ## Avoid
 
-- Using `any` type in TypeScript
 - Logging sensitive information
 - Storing keys in plain text
 - Using synchronous encryption operations
 - Mixing business logic with UI logic
 - Hardcoding configuration values
-- Using deprecated React patterns
 - Small touch targets for mobile
 - Complex desktop-only interactions
 - Heavy animations that drain battery
@@ -245,4 +228,9 @@ export const Default: Story<ComponentProps> = (args) => <Component {...args} />;
 - Battery optimization is important
 - Use Tailwind for consistent styling
 - Create Storybook stories for all components
-- Design system ensures UI consistency 
+- Design system ensures UI consistency
+  description:
+  globs:
+  alwaysApply: false
+
+---
