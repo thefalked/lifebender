@@ -223,7 +223,7 @@ graph LR
 
 ### Prerequisites
 - Bun runtime (latest version)
-- Node.js 18+ (for some tooling)
+- Node.js 22+ (for some tooling)
 - Git
 
 ### Installation
@@ -285,40 +285,6 @@ The project includes comprehensive documentation and development guidelines in `
   - **Routing**: File-based routing, route concepts, and configuration
   - **Setup & Architecture**: Installation, configuration, and architectural decisions
   - **API**: Complete API reference and examples
-
-### Application Structure
-
-```
-lifebender/
-├── src/
-│   ├── main.tsx                 # Main application entry
-│   ├── App.css                  # Global styles
-│   ├── routeTree.gen.ts         # Auto-generated route tree (TanStack Router)
-│   ├── routes/                  # File-based routes (TanStack Router)
-│   │   ├── __root.tsx          # Root layout with HeroUI provider
-│   │   ├── index.tsx           # Home page route
-│   │   ├── about.tsx           # About page route
-│   │   ├── money-manager/       # Money manager app routes
-│   │   └── todo/               # Todo app routes
-│   ├── components/              # Shared UI components (HeroUI + custom)
-│   ├── core/                    # Core services (auth, crypto, db)
-│   ├── apps/                    # Sub-applications
-│   │   ├── money-manager/       # Money management app
-│   │   └── todo/               # Todo app
-│   ├── utils/                   # Utility functions
-│   └── types/                   # TypeScript type definitions
-├── database/
-│   ├── schema/                  # Drizzle schema definitions
-│   ├── migrations/              # Database migrations
-│   └── drizzle.config.ts        # Drizzle configuration
-├── src-tauri/                   # Tauri desktop app configuration
-├── .storybook/                  # Storybook configuration
-├── stories/                     # Component stories for Storybook
-├── public/                      # Static assets
-├── tests/                       # Test files
-├── docs/                        # Documentation
-└── config/                      # Configuration files
-```
 
 ## 🏗️ Multi-App Structure with TanStack Router
 
@@ -468,8 +434,6 @@ src/
 
 For support and questions:
 - Create an issue in the repository
-- Check the documentation in `/docs`
-- Review the troubleshooting guide
 
 ---
 
