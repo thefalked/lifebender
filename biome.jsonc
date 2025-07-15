@@ -20,5 +20,8 @@
       "quoteStyle": "double",
       "jsxQuoteStyle": "double"
     }
+  },
+  "files": {
+    "includes": ["**", "!src/routeTree.gen.ts", "!src/hero.ts"]
   }
 }
