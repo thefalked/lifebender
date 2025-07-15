@@ -1,3 +1,8 @@
+---
+description: Project stack
+globs: "**/*.{ts,tsx,js,jsx}"
+alwaysApply: true
+---
 # LifeBender - Cursor Rules
 
 ## Project Overview
@@ -9,6 +14,8 @@ This is an offline-first multi-app platform built with Bun, Vite, React, TypeScr
 - **Runtime**: Bun (not Node.js)
 - **Build Tool**: Vite
 - **Frontend**: React + TypeScript
+- **UI Library**: HeroUI for beautiful, accessible React components
+- **Routing**: TanStack Router for type-safe routing with built-in data fetching
 - **Styling**: Tailwind CSS for utility-first styling
 - **Component Development**: Storybook for development and testing
 - **Database**: PGLite (SQLite-compatible with PostgreSQL syntax)
@@ -44,19 +51,88 @@ This is an offline-first multi-app platform built with Bun, Vite, React, TypeScr
 - Use large touch targets and gesture navigation
 - Optimize for small screen layouts
 
-## File Organization
+### TanStack Router File-Based Routing
+
+- Use `src/routes/` directory for all route files
+- Create `__root.tsx` for the root layout with HeroUI provider
+- Use `createFileRoute()` for each route component
+- Follow file naming conventions: `index.tsx`, `about.tsx`, `money-manager.tsx`
+- Use `Route.useLoaderData()` for type-safe data access
+- Implement loaders for data fetching with proper error handling
+- Use `Outlet` component for nested layouts
+- Leverage auto-generated `routeTree.gen.ts` for type safety
+
+## Multi-App Structure with TanStack Router
+
+This project uses a modular, file-based routing approach to support multiple sub-applications ("apps") within a single platform. Each app is self-contained and leverages TanStack Router for type-safe, scalable navigation.
 
 ### Directory Structure
 
 ```
 src/
-├── components/     # Shared UI components
-├── core/          # Core services (auth, crypto, db)
-├── router/        # Application routing
-├── apps/          # Sub-applications
-├── utils/         # Utility functions
-└── types/         # TypeScript definitions
+├── main.tsx
+├── routeTree.gen.ts
+├── routes/
+│   ├── __root.tsx                # Root layout (global providers, navigation)
+│   ├── index.tsx                 # Home page
+│   ├── _authenticated.tsx        # (Optional) Authenticated layout for protected routes
+│   ├── login.tsx                 # Login page
+│   ├── not-found.tsx             # 404 page
+│   ├── money-manager/            # Money Manager app
+│   │   ├── index.tsx             # Money Manager dashboard
+│   │   ├── accounts.tsx          # Accounts list
+│   │   ├── transactions.tsx      # Transactions list
+│   │   ├── budget.tsx            # Budget tracking
+│   │   └── ...                   # Other money-manager features
+│   └── todo/                     # Todo app
+│       ├── index.tsx             # Todo dashboard
+│       ├── tasks.tsx             # Task list
+│       ├── categories.tsx        # Task categories
+│       └── ...                   # Other todo features
+├── components/                   # Shared UI components
+├── core/                         # Shared services (auth, crypto, db, etc.)
+├── apps/                         # (Optional) App-specific business logic
+├── utils/                        # Utility functions
+├── types/                        # TypeScript types
 ```
+
+### Routing Patterns
+
+- **Root Layout (`__root.tsx`)**: Global providers, navigation, error boundaries.
+- **Sub-App Entry Points**: Each app has its own directory under `routes/` with an `index.tsx` as the dashboard/landing page.
+- **Nested Features**: App-specific features are additional files within each app’s directory.
+- **Authentication**: Use `_authenticated.tsx` as a layout route to wrap all protected routes. Implement `beforeLoad` for auth checks.
+- **Error Handling**: Use `not-found.tsx` for 404s and error boundaries in root or app layouts.
+
+### Example Route URLs
+
+- `/` → Home
+- `/login` → Login
+- `/money-manager` → Money Manager dashboard
+- `/money-manager/accounts` → Accounts list
+- `/money-manager/transactions` → Transactions
+- `/todo` → Todo dashboard
+- `/todo/tasks` → Task list
+- `/todo/categories` → Task categories
+
+### Best Practices
+
+- **Isolation**: Each app’s routes, components, and logic are isolated in their own directory.
+- **Shared Core**: Use `core/` for shared services and `components/` for shared UI.
+- **Type Safety**: Leverage TanStack Router’s type-safe loaders, params, and search params.
+- **Code Splitting**: File-based routing enables automatic code splitting for each app and feature.
+- **Offline-First**: All apps should work offline, using local storage and proper offline indicators.
+- **Mobile-First**: Design all components and layouts for mobile usability.
+
+### Extending the Platform
+
+- **Add New Apps**: Create a new directory under `routes/` (e.g., `notes/`, `passwords/`) and follow the same structure.
+- **App-Specific Providers**: Use layout routes (e.g., `money-manager/_layout.tsx`) for app-specific context/providers.
+- **Protected Apps**: Place sensitive apps under `_authenticated/` or use `beforeLoad` in their entry points.
+
+### Documentation References
+
+- See `.cursor/rules/tanstack-react-router_guide.mdc` for advanced routing, authentication, and code splitting patterns.
 
 ### Naming Conventions
 
@@ -174,19 +250,32 @@ try {
 }
 ```
 
-### Component Structure (Mobile-First with Tailwind)
+### Component Structure (Mobile-First with HeroUI + Tailwind)
 
 ```typescript
+import { Button, Card, Input } from "@heroui/react";
+
 interface ComponentProps {
   // Define props interface with Zod validation
 }
 
 export const Component: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
-  // Mobile-first component with Tailwind CSS
+  // Mobile-first component with HeroUI + Tailwind CSS
   return (
-    <div className="p-4 rounded-lg bg-white shadow-sm touch-manipulation">
-      {/* Large touch targets, responsive design */}
-    </div>
+    <Card className="p-4 rounded-lg bg-white shadow-sm touch-manipulation">
+      <Input 
+        placeholder="Enter text..."
+        className="w-full"
+        size="lg"
+      />
+      <Button 
+        color="primary"
+        size="lg"
+        className="w-full mt-4"
+      >
+        Submit
+      </Button>
+    </Card>
   );
 };
 
@@ -215,6 +304,10 @@ export const Default: Story<ComponentProps> = (args) => <Component {...args} />;
 - Custom CSS when Tailwind utilities exist
 - Components without Storybook stories
 - Non-responsive design patterns
+- Using custom components when HeroUI components exist
+- Creating custom routing logic instead of using TanStack Router
+- Not using HeroUI's built-in accessibility features
+- Ignoring TanStack Router's type-safe data fetching capabilities
 
 ## Remember
 
@@ -229,8 +322,16 @@ export const Default: Story<ComponentProps> = (args) => <Component {...args} />;
 - Use Tailwind for consistent styling
 - Create Storybook stories for all components
 - Design system ensures UI consistency
-  description:
-  globs:
-  alwaysApply: false
-
----
+- Use HeroUI components for consistent, accessible UI
+- Leverage TanStack Router's type-safe routing and data fetching
+- HeroUI provides built-in dark mode and theming
+- TanStack Router enables offline-first navigation patterns
+- HeroUI Provider should wrap the entire app in `__root.tsx`
+- Use TanStack Router's file-based routing for automatic code splitting
+- Combine HeroUI's theming with TanStack Router's navigation state
+- Implement proper loading states with HeroUI components
+- Use TanStack Router's search params for app state management
+- Use TanStack Router's file-based routing for automatic code splitting
+- Combine HeroUI's theming with TanStack Router's navigation state
+- Implement proper loading states with HeroUI components
+- Use TanStack Router's search params for app state management

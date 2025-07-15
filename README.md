@@ -13,6 +13,8 @@ LifeBender is a desktop application that provides multiple sub-applications with
 - **Runtime**: [Bun](https://bun.com/) - Fast JavaScript runtime
 - **Build Tool**: [Vite](https://vite.dev/) - Next-generation frontend tooling
 - **Frontend**: React + TypeScript
+- **UI Library**: [HeroUI](https://www.heroui.com/) - Beautiful, fast and modern React UI library
+- **Routing**: [TanStack Router](https://tanstack.com/router/latest) - Type-safe routing with built-in data fetching
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - **Component Development**: [Storybook](https://storybook.js.org/) - Component development and testing
 - **Database**: [PGLite](https://pglite.dev/) - SQLite-compatible database with PostgreSQL syntax
@@ -116,6 +118,24 @@ graph LR
 
 ## 📋 Requirements
 
+### Documentation & Development Guidelines
+
+#### TanStack Router Documentation
+- **Comprehensive Guides**: Detailed routing patterns, authentication, and advanced features available in `.cursor/rules/`
+- **File-Based Routing**: Recommended approach using `src/routes/` directory structure
+- **Type Safety**: 100% inferred TypeScript support for routes, params, and search params
+- **Data Fetching**: Built-in loaders with SWR caching for optimal performance
+- **Authentication**: Protected routes with `beforeLoad` and redirect patterns
+- **Code Splitting**: Automatic code splitting for better performance
+- **Search Params**: Type-safe JSON-first search parameter management
+
+#### HeroUI Component Library
+- **Accessible Components**: Built-in accessibility features and WCAG compliance
+- **Theming**: Dark/light mode support with customizable themes
+- **Mobile-First**: Optimized components for touch interactions
+- **Storybook Integration**: Component development and testing workflow
+- **TypeScript Support**: Full type safety for all components
+
 ### Core Platform Requirements
 
 #### 1. Offline-First Architecture
@@ -171,6 +191,8 @@ graph LR
 - **Node.js Alternative**: Use Bun for faster development
 - **Build System**: Vite for fast hot reload and optimized builds
 - **Type Safety**: Full TypeScript implementation with Zod validation
+- **UI Library**: HeroUI for beautiful, accessible React components with built-in theming
+- **Routing**: TanStack Router for type-safe routing with built-in data fetching and offline support
 - **ORM**: Drizzle with PGLite for type-safe database operations and migrations
 - **Styling**: Tailwind CSS for utility-first styling and mobile-first design
 - **Component Development**: Storybook for component development, testing, and styleguide
@@ -189,10 +211,10 @@ graph LR
 #### UI/UX Requirements
 - **Mobile-First Design**: Optimized for phone screens and touch interactions
 - **Responsive Design**: Works on different screen sizes
-- **Design System**: Storybook for component development and styleguide
-- **Styling**: Tailwind CSS for utility-first styling and consistency
-- **Dark/Light Mode**: Theme switching capability
-- **Accessibility**: WCAG 2.1 AA compliance
+- **Design System**: HeroUI components with Storybook for development and styleguide
+- **Styling**: HeroUI + Tailwind CSS for utility-first styling and consistency
+- **Dark/Light Mode**: HeroUI's built-in theme switching capability
+- **Accessibility**: WCAG 2.1 AA compliance with HeroUI's accessibility features
 - **Touch Navigation**: Gesture-based navigation and large touch targets
 - **Offline Indicators**: Clear status indicators
 - **Cross-Platform**: Tauri for desktop deployment across all environments
@@ -252,14 +274,34 @@ bun run preview
 
 ## 📁 Project Structure
 
+### Documentation & Development Rules
+
+The project includes comprehensive documentation and development guidelines in `.cursor/rules/`:
+
+- **`lifebender.mdc`**: Project-specific guidelines, architecture patterns, and best practices
+- **`ultracite.mdc`**: Code quality rules and linting standards  
+- **`tanstack-react-router_*.mdc`**: Complete TanStack Router documentation including:
+  - **Guide**: Authentication, code splitting, and advanced patterns
+  - **Routing**: File-based routing, route concepts, and configuration
+  - **Setup & Architecture**: Installation, configuration, and architectural decisions
+  - **API**: Complete API reference and examples
+
+### Application Structure
+
 ```
 lifebender/
 ├── src/
 │   ├── main.tsx                 # Main application entry
-│   ├── App.tsx                  # Root application component
-│   ├── components/              # Shared UI components
+│   ├── App.css                  # Global styles
+│   ├── routeTree.gen.ts         # Auto-generated route tree (TanStack Router)
+│   ├── routes/                  # File-based routes (TanStack Router)
+│   │   ├── __root.tsx          # Root layout with HeroUI provider
+│   │   ├── index.tsx           # Home page route
+│   │   ├── about.tsx           # About page route
+│   │   ├── money-manager/       # Money manager app routes
+│   │   └── todo/               # Todo app routes
+│   ├── components/              # Shared UI components (HeroUI + custom)
 │   ├── core/                    # Core services (auth, crypto, db)
-│   ├── router/                  # Application routing
 │   ├── apps/                    # Sub-applications
 │   │   ├── money-manager/       # Money management app
 │   │   └── todo/               # Todo app
@@ -277,6 +319,81 @@ lifebender/
 ├── docs/                        # Documentation
 └── config/                      # Configuration files
 ```
+
+## 🏗️ Multi-App Structure with TanStack Router
+
+This project uses a modular, file-based routing approach to support multiple sub-applications ("apps") within a single platform. Each app is self-contained and leverages TanStack Router for type-safe, scalable navigation.
+
+### Directory Structure
+
+```
+src/
+├── main.tsx
+├── routeTree.gen.ts
+├── routes/
+│   ├── __root.tsx                # Root layout (global providers, navigation)
+│   ├── index.tsx                 # Home page
+│   ├── _authenticated.tsx        # (Optional) Authenticated layout for protected routes
+│   ├── login.tsx                 # Login page
+│   ├── not-found.tsx             # 404 page
+│   ├── money-manager/            # Money Manager app
+│   │   ├── index.tsx             # Money Manager dashboard
+│   │   ├── accounts.tsx          # Accounts list
+│   │   ├── transactions.tsx      # Transactions list
+│   │   ├── budget.tsx            # Budget tracking
+│   │   └── ...                   # Other money-manager features
+│   └── todo/                     # Todo app
+│       ├── index.tsx             # Todo dashboard
+│       ├── tasks.tsx             # Task list
+│       ├── categories.tsx        # Task categories
+│       └── ...                   # Other todo features
+├── components/                   # Shared UI components
+├── core/                         # Shared services (auth, crypto, db, etc.)
+├── apps/                         # (Optional) App-specific business logic
+├── utils/                        # Utility functions
+├── types/                        # TypeScript types
+```
+
+### Routing Patterns
+
+- **Root Layout (`__root.tsx`)**: Global providers, navigation, error boundaries.
+- **Sub-App Entry Points**: Each app has its own directory under `routes/` with an `index.tsx` as the dashboard/landing page.
+- **Nested Features**: App-specific features are additional files within each app’s directory.
+- **Authentication**: Use `_authenticated.tsx` as a layout route to wrap all protected routes. Implement `beforeLoad` for auth checks.
+- **Error Handling**: Use `not-found.tsx` for 404s and error boundaries in root or app layouts.
+
+### Example Route URLs
+
+- `/` → Home
+- `/login` → Login
+- `/money-manager` → Money Manager dashboard
+- `/money-manager/accounts` → Accounts list
+- `/money-manager/transactions` → Transactions
+- `/todo` → Todo dashboard
+- `/todo/tasks` → Task list
+- `/todo/categories` → Task categories
+
+### Best Practices
+
+- **Isolation**: Each app’s routes, components, and logic are isolated in their own directory.
+- **Shared Core**: Use `core/` for shared services and `components/` for shared UI.
+- **Type Safety**: Leverage TanStack Router’s type-safe loaders, params, and search params.
+- **Code Splitting**: File-based routing enables automatic code splitting for each app and feature.
+- **Offline-First**: All apps should work offline, using local storage and proper offline indicators.
+- **Mobile-First**: Design all components and layouts for mobile usability.
+
+### Extending the Platform
+
+- **Add New Apps**: Create a new directory under `routes/` (e.g., `notes/`, `passwords/`) and follow the same structure.
+- **App-Specific Providers**: Use layout routes (e.g., `money-manager/_layout.tsx`) for app-specific context/providers.
+- **Protected Apps**: Place sensitive apps under `_authenticated/` or use `beforeLoad` in their entry points.
+
+### Documentation References
+
+- See `.cursor/rules/tanstack-react-router_guide.mdc` for advanced routing, authentication, and code splitting patterns.
+- See `.cursor/rules/lifebender.mdc` for project-specific architecture and security guidelines.
+
+---
 
 ## 🔐 Security Considerations
 
