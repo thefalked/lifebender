@@ -22,6 +22,6 @@
     }
   },
   "files": {
-    "includes": ["**", "!src/routeTree.gen.ts", "!src/hero.ts"]
+    "includes": ["**", "!src/routeTree.gen.ts", "!src/hero.ts", "!src-tauri/**"]
   }
 }
